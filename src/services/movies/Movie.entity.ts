@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToMany, JoinTable } from 'typeorm';
 import { Genre, IGenre } from '../genres/Genre.entity';
 
 @Entity()
@@ -19,11 +19,10 @@ export class Movie {
     })
     public description: string;
 
-    @JoinColumn({
-        name: 'genre',
-        referencedColumnName: 'id'
+    @JoinTable()
+    @ManyToMany(type => Genre, genre => genre.movies, {
+        cascade: true
     })
-    @ManyToMany(type => Genre, genre => genre.id)
     public genre: Genre[];
 
     @Column({
