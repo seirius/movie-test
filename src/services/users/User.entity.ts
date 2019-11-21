@@ -19,4 +19,16 @@ export class User {
     })
     public password: string;
 
+    public prepare(): IUser {
+        return {
+            id: this.id,
+            username: this.username,
+        };
+    }
+
+}
+
+export interface IUser {
+    id: number;
+    username: string;
 }

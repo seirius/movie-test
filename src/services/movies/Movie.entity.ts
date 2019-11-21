@@ -36,7 +36,7 @@ export class Movie {
             id: this.id,
             title: this.title,
             description: this.description,
-            genre: this.genre,
+            genre: this.genre ? this.genre.map((genre) => genre.title) : undefined,
             image: this.image,
         };
     }
@@ -47,6 +47,6 @@ export interface IMovie {
     id: number;
     title: string;
     description?: string;
-    genre: IGenre[];
+    genre?: string[];
     image?: string;
 }

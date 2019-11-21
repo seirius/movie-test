@@ -10,6 +10,10 @@ export class Migration1574204258988 implements MigrationInterface {
         await queryRunner.query("CREATE TABLE `movie_genre_genre` (`movieId` int NOT NULL, `genreId` int NOT NULL, INDEX `IDX_3a4b81efbd4fdd362fd1187fac` (`movieId`), INDEX `IDX_ab0be65b579c5b4a70d9b676c5` (`genreId`), PRIMARY KEY (`movieId`, `genreId`)) ENGINE=InnoDB", undefined);
         await queryRunner.query("ALTER TABLE `movie_genre_genre` ADD CONSTRAINT `FK_3a4b81efbd4fdd362fd1187facb` FOREIGN KEY (`movieId`) REFERENCES `movie`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION", undefined);
         await queryRunner.query("ALTER TABLE `movie_genre_genre` ADD CONSTRAINT `FK_ab0be65b579c5b4a70d9b676c54` FOREIGN KEY (`genreId`) REFERENCES `genre`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION", undefined);
+        await queryRunner.query("INSERT INTO genre(title) values ('terror')");
+        await queryRunner.query("INSERT INTO genre(title) values ('drama')");
+        await queryRunner.query("INSERT INTO genre(title) values ('comedy')");
+        await queryRunner.query("INSERT INTO genre(title) values ('action')");
     }
 
     public async down(queryRunner: QueryRunner): Promise<any> {
