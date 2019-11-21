@@ -1,0 +1,41 @@
+# Use root/example as user/password credentials
+version: "3.1"
+
+services:
+
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8 --collation-server=utf8_general_ci
+    environment:
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: theater
+      MYSQL_USER: theater_admin
+      MYSQL_PASSWORD: theater_admin
+    ports:
+      - "3306:3306"
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+
+  movie-test:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    ports:
+      - "3000:3000"
+    environment:
+      WAIT_HOSTS: db:3306, redis:6379
+      REDIS_PORT: 6379
+      REDIS_HOST: redis
+      TYPEORM_CONNECTION: mysql
+      TYPEORM_HOST: db
+      TYPEORM_USERNAME: theater_admin
+      TYPEORM_PASSWORD: theater_admin
+      TYPEORM_DATABASE: theater
+      TYPEORM_PORT: 3306
+      TYPEORM_LOGGING: 0
+      TYPEORM_ENTITIES: "**/*.entity.js"
+      TYPEORM_MIGRATIONS: "**/migrations/**/*.js"

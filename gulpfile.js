@@ -11,8 +11,10 @@ gulp.task('run-migration', () => {
 });
 
 gulp.task('deploy', (done) => {
-    nodemon({
-        script: 'src/app.ts',
-        done
+    gulp.series(['run-migration'])(() => {
+        nodemon({
+            script: 'src/app.ts',
+            done
+        });
     });
 });

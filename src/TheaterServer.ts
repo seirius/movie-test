@@ -13,8 +13,8 @@ import { createClient } from 'redis';
 import * as connectRedis from 'connect-redis';
 import * as swagger from 'swagger-jsdoc';
 import * as swaggerUi from 'swagger-ui-express';
-const RedisClient = createClient();
-const RedisStore = connectRedis(expressSession);
+import { config } from 'dotenv';
+config();
 
 const specs = swagger({
     apis: ['**/*.controller.ts'],
@@ -27,9 +27,17 @@ const specs = swagger({
     },
 });
 
-export class TheaterServer extends Server {
+const REDIS_HOST: string = process.env.REDIS_HOST ? process.env.REDIS_HOST : 'localhost';
+const REDIS_PORT: number = isNaN(process.env.REDIS_PORT as any) ? 6379 : parseInt(process.env.REDIS_PORT);
+const PORT: number = isNaN(process.env.PORT as any) ? 3000 : parseInt(process.env.PORT);
 
-    public static readonly port = 3000;
+const RedisClient = createClient({
+    host: REDIS_HOST,
+    port: REDIS_PORT,
+});
+const RedisStore = connectRedis(expressSession);
+
+export class TheaterServer extends Server {
 
     constructor() {
         super(true);
@@ -45,8 +53,8 @@ export class TheaterServer extends Server {
             resave: false,
             name: 'redis_session_store',
             store: new RedisStore({
-                host: 'localhost',
-                port: 6379,
+                host: REDIS_HOST,
+                port: REDIS_PORT,
                 client: RedisClient,
             }),
         }));
@@ -65,7 +73,7 @@ export class TheaterServer extends Server {
             new UserController(),
             new LoginController(),
         ]);
-        this.app.listen(TheaterServer.port, () => console.log(`Theater listenning on ${TheaterServer.port}, swagger on: http://localhost:${TheaterServer.port}/swagger`));
+        this.app.listen(PORT, () => console.log(`Theater listenning on ${PORT}, swagger on: http://localhost:${PORT}/swagger`));
     }
 
 }
